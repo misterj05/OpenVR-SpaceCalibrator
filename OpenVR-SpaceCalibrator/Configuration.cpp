@@ -1,5 +1,5 @@
-#include "stdafx.h"
 #include "Configuration.h"
+#include "windows.h"
 
 #include <picojson.h>
 
@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iomanip>
 #include <limits>
+
 
 static picojson::array FloatArray(const float *buf, int numFloats)
 {

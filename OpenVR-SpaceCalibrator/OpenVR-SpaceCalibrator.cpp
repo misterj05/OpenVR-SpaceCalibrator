@@ -1,8 +1,8 @@
-﻿#include "stdafx.h"
-#include "Calibration.h"
+﻿#include "Calibration.h"
 #include "Configuration.h"
 #include "EmbeddedFiles.h"
 #include "UserInterface.h"
+#include "windows.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
@@ -10,7 +10,6 @@
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
 #include <openvr.h>
-#include <direct.h>
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
@@ -18,8 +17,9 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 #define OPENVR_APPLICATION_KEY "pushrax.SpaceCalibrator"
 
-extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
+// TODO see how this should be handled
+// extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+// extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
 
 void CreateConsole()
 {

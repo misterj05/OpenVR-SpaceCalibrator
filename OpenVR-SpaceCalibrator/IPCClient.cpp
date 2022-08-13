@@ -1,6 +1,7 @@
-#include "stdafx.h"
 #include "IPCClient.h"
+#include "windows.h"
 
+#include <stdexcept>
 #include <string>
 
 static std::string LastErrorString(DWORD lastError)
