@@ -1,5 +1,4 @@
 #include "Configuration.h"
-#include "windows.h"
 
 #include <picojson.h>
 
@@ -143,56 +142,46 @@ static void WriteProfile(CalibrationContext &ctx, std::ostream &out)
 	out << profilesV.serialize(true);
 }
 
-static void LogRegistryResult(LSTATUS result)
-{
-	char *message;
-	FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_ALLOCATE_BUFFER, 0, result, LANG_USER_DEFAULT, (LPSTR)&message, 0, NULL);
-	std::cerr << "Opening registry key: " << message << std::endl;
-}
-
-static const char *RegistryKey = "Software\\OpenVR-SpaceCalibrator";
-
 static std::string ReadRegistryKey()
 {
-	DWORD size = 0;
-	auto result = RegGetValueA(HKEY_CURRENT_USER_LOCAL_SETTINGS, RegistryKey, "Config", RRF_RT_REG_SZ, 0, 0, &size);
-	if (result != ERROR_SUCCESS)
-	{
-		LogRegistryResult(result);
+	FILE* config = fopen((std::string(getenv("HOME")) + "/.config/OpenVR-SpaceCalibrator/config.json").c_str(), "r");
+	if (config == nullptr) {
+		std::cout << "Could not find config file" << std::endl;
 		return "";
 	}
-
-	std::string str;
-	str.resize(size);
-
-	result = RegGetValueA(HKEY_CURRENT_USER_LOCAL_SETTINGS, RegistryKey, "Config", RRF_RT_REG_SZ, 0, &str[0], &size);
-	if (result != ERROR_SUCCESS)
-	{
-		LogRegistryResult(result);
+	if (fseek(config, 0, SEEK_END) == -1) {
+		std::cout << "Could not seek to the end of the config file" << std::endl;
 		return "";
 	}
-	
-	str.resize(size - 1);
-	return str;
+	long fileSize = ftell(config);
+	if (fileSize == -1) {
+		std::cout << "Could not get the size of the config file" << std::endl;
+		return "";
+	}
+	rewind(config);
+	std::string contents;
+	contents.resize(fileSize);
+	size_t result = fread(contents.data(), fileSize, 1, config);
+	fclose(config);
+	if (result == 0) {
+		std::cout << "Error occurred when reading config file" << std::endl;
+		return "";
+	}
+	return contents;
 }
 
-static void WriteRegistryKey(std::string str)
+static void WriteRegistryKey(std::string contents)
 {
-	HKEY hkey;
-	auto result = RegCreateKeyExA(HKEY_CURRENT_USER_LOCAL_SETTINGS, RegistryKey, 0, REG_NONE, 0, KEY_ALL_ACCESS, 0, &hkey, 0);
-	if (result != ERROR_SUCCESS)
-	{
-		LogRegistryResult(result);
+	FILE* config = fopen((std::string(getenv("HOME")) + "/.config/OpenVR-SpaceCalibrator/config.json").c_str(), "w");
+	if (config == nullptr) {
+		std::cout << "Could not find config file" << std::endl;
 		return;
 	}
-
-	DWORD size = str.size() + 1;
-
-	result = RegSetValueExA(hkey, "Config", 0, REG_SZ, reinterpret_cast<const BYTE*>(str.c_str()), size);
-	if (result != ERROR_SUCCESS)
-		LogRegistryResult(result);
-
-	RegCloseKey(hkey);
+	size_t result = fwrite(contents.data(), contents.size(), 1, config);
+	fclose(config);
+	if (result == 0) {
+		std::cout << "Error occurred when reading config file" << std::endl;
+	}
 }
 
 void LoadProfile(CalibrationContext &ctx)
