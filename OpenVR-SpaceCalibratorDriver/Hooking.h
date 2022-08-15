@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Logging.h"
-#include "windows.h"
 #include <map>
 #include <string>
 
