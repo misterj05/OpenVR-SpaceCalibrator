@@ -1,16 +1,10 @@
 #pragma once
 
-#define APIENTRY
 #define WINAPI
-#define DLL_THREAD_ATTACH 0
-#define DLL_THREAD_DETACH 1
-#define DLL_PROCESS_ATTACH 2
-#define DLL_PROCESS_DETACH 3
 #define ERROR_IO_PENDING 0
 #define ERROR_PIPE_CONNECTED 1
 #define OPENVRSPACECALIBRATORDRIVER_API
 using BOOL = int;
-using HMODULE = int;
 using DWORD = int;
 using LPVOID = void*;
 using HANDLE = int;
