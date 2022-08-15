@@ -1,7 +1,6 @@
 #include "IPCClient.h"
 
 #include <cstring>
-#include <fcntl.h>
 #include <stdexcept>
 #include <sys/socket.h>
 #include <sys/un.h>

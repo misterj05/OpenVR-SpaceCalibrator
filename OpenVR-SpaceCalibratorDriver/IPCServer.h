@@ -6,8 +6,6 @@
 #include <set>
 #include <mutex>
 
-#include "windows.h"
-
 class ServerTrackedDeviceProvider;
 
 class IPCServer
@@ -22,31 +20,26 @@ public:
 private:
 	void HandleRequest(const protocol::Request &request, protocol::Response &response);
 
-	struct PipeInstance
+	struct SocketInstance
 	{
-		OVERLAPPED overlap; // Used by the API
-		HANDLE pipe;
+		int clientSocket;
 		IPCServer *server;
 
 		protocol::Request request;
 		protocol::Response response;
 	};
 
-	PipeInstance *CreatePipeInstance(HANDLE pipe);
-	void ClosePipeInstance(PipeInstance *pipeInst);
+	SocketInstance *CreateSocketInstance(int fd);
+	void CloseSocketInstance(SocketInstance *pipeInst);
 
 	static void RunThread(IPCServer *_this);
-	static BOOL CreateAndConnectInstance(LPOVERLAPPED overlap, HANDLE &pipe);
-	static void WINAPI CompletedReadCallback(DWORD err, DWORD bytesRead, LPOVERLAPPED overlap);
-	static void WINAPI CompletedWriteCallback(DWORD err, DWORD bytesWritten, LPOVERLAPPED overlap);
 
 	std::thread mainThread;
 
 	bool running = false;
 	bool stop = false;
-
-	std::set<PipeInstance *> pipes;
-	HANDLE connectEvent;
+	int stopRead = -1;
+	int stopWrite = -1;
 
 	ServerTrackedDeviceProvider *driver;
 };

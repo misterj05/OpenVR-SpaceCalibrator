@@ -6,7 +6,7 @@
 #include <cstring>
 #include <openvr_driver.h>
 
-OPENVRSPACECALIBRATORDRIVER_API void *HmdDriverFactory(const char *pInterfaceName, int *pReturnCode)
+void *HmdDriverFactory(const char *pInterfaceName, int *pReturnCode)
 {
 	TRACE("HmdDriverFactory(%s)", pInterfaceName);
 
