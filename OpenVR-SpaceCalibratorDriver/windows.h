@@ -7,5 +7,4 @@ void MH_RemoveHook(void*);
 char* MH_StatusToString(int);
 int MH_Initialize();
 void MH_Uninitialize();
-int localtime_s(tm*, long int*);
 extern int MH_OK;
