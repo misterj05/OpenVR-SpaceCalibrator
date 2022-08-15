@@ -3,19 +3,31 @@
 #include <cstring>
 #include <fcntl.h>
 #include <stdexcept>
+#include <sys/socket.h>
+#include <sys/un.h>
 #include <unistd.h>
+
+#include <iostream>
 
 IPCClient::~IPCClient()
 {
-	if (pipe != -1)
-		close(pipe);
+	if (fd != -1)
+		close(fd);
 }
 
 void IPCClient::Connect()
 {
-	pipe = open((std::string(getenv("HOME")) + "/.local/share/OpenVR-SpaceCalibrator/pipe").c_str(), O_RDWR);
-
-	if (pipe == -1)
+	fd = socket(AF_UNIX, SOCK_STREAM, 0);
+	if (fd == -1) {
+		throw std::runtime_error("Could not create socket");
+	}
+	std::string socketPath = std::string(getenv("HOME")) + "/.local/share/OpenVR-SpaceCalibrator/socket";
+	struct sockaddr_un address;
+	memset(&address, 0, sizeof(struct sockaddr_un));
+	address.sun_family = AF_UNIX;
+	strncpy(address.sun_path, socketPath.data(), socketPath.size());
+	int result = connect(fd, reinterpret_cast<sockaddr*>(&address), sizeof(address));
+	if (result == -1)
 	{
 		throw std::runtime_error("Space Calibrator driver unavailable. Make sure SteamVR is running, and the Space Calibrator addon is enabled in SteamVR settings.");
 	}
@@ -41,7 +53,7 @@ protocol::Response IPCClient::SendBlocking(const protocol::Request &request)
 
 void IPCClient::Send(const protocol::Request &request)
 {
-	ssize_t bytesWritten = write(pipe, &request, sizeof request);
+	ssize_t bytesWritten = write(fd, &request, sizeof request);
 	if (bytesWritten == -1)
 	{
 		throw std::runtime_error(std::string("Error writing IPC request. Error: ") + strerror(errno));
@@ -51,7 +63,7 @@ void IPCClient::Send(const protocol::Request &request)
 protocol::Response IPCClient::Receive()
 {
 	protocol::Response response(protocol::ResponseInvalid);
-	ssize_t bytesRead = read(pipe, &response, sizeof response);
+	ssize_t bytesRead = read(fd, &response, sizeof response);
 	if (bytesRead == -1)
 	{
 		throw std::runtime_error(std::string("Error reading IPC response. Error: ") + strerror(errno));

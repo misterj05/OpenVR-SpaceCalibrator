@@ -2,6 +2,8 @@
 #include "Logging.h"
 #include <chrono>
 
+#include "windows.h"
+
 FILE *LogFile;
 
 void OpenLogFile()

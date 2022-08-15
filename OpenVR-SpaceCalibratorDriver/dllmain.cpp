@@ -1,8 +1,7 @@
 #include "Logging.h"
 #include "../Version.h"
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include "windows.h"
 #include <cstdio>
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)

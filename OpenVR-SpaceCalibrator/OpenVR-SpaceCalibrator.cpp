@@ -2,38 +2,17 @@
 #include "Configuration.h"
 #include "EmbeddedFiles.h"
 #include "UserInterface.h"
-#include "windows.h"
 
 #include <imgui/imgui.h>
 #include <imgui/imgui_impl_glfw.h>
 #include <imgui/imgui_impl_opengl3.h>
+#include <linux/limits.h>
 #include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
 #include <openvr.h>
-
-#pragma comment(linker,"\"/manifestdependency:type='win32' \
-name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
-processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#include <unistd.h>
 
 #define OPENVR_APPLICATION_KEY "pushrax.SpaceCalibrator"
-
-// TODO see how this should be handled
-// extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-// extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
-
-void CreateConsole()
-{
-	static bool created = false;
-	if (!created)
-	{
-		AllocConsole();
-		FILE *file = nullptr;
-		freopen_s(&file, "CONIN$", "r", stdin);
-		freopen_s(&file, "CONOUT$", "w", stdout);
-		freopen_s(&file, "CONOUT$", "w", stderr);
-		created = true;
-	}
-}
 
 //#define DEBUG_LOGS
 
@@ -47,14 +26,14 @@ void openGLDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
 	fprintf(stderr, "OpenGL Debug %u: %.*s\n", id, length, message);
 }
 
-static void HandleCommandLine(LPWSTR lpCmdLine);
+static void HandleCommandLineArg(const char* cmdLineArg);
 
 static GLFWwindow *glfwWindow = nullptr;
 static vr::VROverlayHandle_t overlayMainHandle = 0, overlayThumbnailHandle = 0;
 static GLuint fboHandle = 0, fboTextureHandle = 0;
 static int fboTextureWidth = 0, fboTextureHeight = 0;
 
-static char cwd[MAX_PATH];
+static char cwd[PATH_MAX];
 
 void CreateGLFWWindow()
 {
@@ -339,18 +318,16 @@ void RunLoop()
 	}
 }
 
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
+int main(int argc, char** argv)
 {
-	_getcwd(cwd, MAX_PATH);
-	HandleCommandLine(lpCmdLine);
-
-#ifdef DEBUG_LOGS
-	CreateConsole();
-#endif
+	getcwd(cwd, PATH_MAX);
+	for (int i = 1; i < argc; i++) {
+		HandleCommandLineArg(argv[i]);
+	}
 
 	if (!glfwInit())
 	{
-		MessageBox(nullptr, L"Failed to initialize GLFW", L"", 0);
+		std::cerr << "Failed to initialize GLFW" << std::endl;
 		return 0;
 	}
 
@@ -378,9 +355,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	catch (std::runtime_error &e)
 	{
 		std::cerr << "Runtime error: " << e.what() << std::endl;
-		wchar_t message[1024];
-		swprintf(message, 1024, L"%hs", e.what());
-		MessageBox(nullptr, message, L"Runtime Error", 0);
 	}
 
 	if (glfwWindow)
@@ -390,17 +364,17 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	return 0;
 }
 
-static void HandleCommandLine(LPWSTR lpCmdLine)
+static void HandleCommandLineArg(const char* cmdLineArg)
 {
-	if (lstrcmp(lpCmdLine, L"-openvrpath") == 0)
+	if (strcmp(cmdLineArg, "-openvrpath") == 0)
 	{
 		auto vrErr = vr::VRInitError_None;
 		vr::VR_Init(&vrErr, vr::VRApplication_Utility);
 		if (vrErr == vr::VRInitError_None)
 		{
-			char cruntimePath[MAX_PATH] = { 0 };
+			char cruntimePath[PATH_MAX] = { 0 };
 			unsigned int pathLen;
-			vr::VR_GetRuntimePath(cruntimePath, MAX_PATH, &pathLen);
+			vr::VR_GetRuntimePath(cruntimePath, PATH_MAX, &pathLen);
 
 			printf("%s", cruntimePath);
 			vr::VR_Shutdown();
@@ -410,7 +384,7 @@ static void HandleCommandLine(LPWSTR lpCmdLine)
 		vr::VR_Shutdown();
 		exit(-2);
 	}
-	else if (lstrcmp(lpCmdLine, L"-installmanifest") == 0)
+	else if (strcmp(cmdLineArg, "-installmanifest") == 0)
 	{
 		auto vrErr = vr::VRInitError_None;
 		vr::VR_Init(&vrErr, vr::VRApplication_Utility);
@@ -418,9 +392,9 @@ static void HandleCommandLine(LPWSTR lpCmdLine)
 		{
 			if (vr::VRApplications()->IsApplicationInstalled(OPENVR_APPLICATION_KEY))
 			{
-				char oldWd[MAX_PATH] = { 0 };
+				char oldWd[PATH_MAX] = { 0 };
 				auto vrAppErr = vr::VRApplicationError_None;
-				vr::VRApplications()->GetApplicationPropertyString(OPENVR_APPLICATION_KEY, vr::VRApplicationProperty_WorkingDirectory_String, oldWd, MAX_PATH, &vrAppErr);
+				vr::VRApplications()->GetApplicationPropertyString(OPENVR_APPLICATION_KEY, vr::VRApplicationProperty_WorkingDirectory_String, oldWd, PATH_MAX, &vrAppErr);
 				if (vrAppErr != vr::VRApplicationError_None)
 				{
 					fprintf(stderr, "Failed to get old working dir, skipping removal: %s\n", vr::VRApplications()->GetApplicationsErrorNameFromEnum(vrAppErr));
@@ -452,7 +426,7 @@ static void HandleCommandLine(LPWSTR lpCmdLine)
 		vr::VR_Shutdown();
 		exit(-2);
 	}
-	else if (lstrcmp(lpCmdLine, L"-removemanifest") == 0)
+	else if (strcmp(cmdLineArg, "-removemanifest") == 0)
 	{
 		auto vrErr = vr::VRInitError_None;
 		vr::VR_Init(&vrErr, vr::VRApplication_Utility);
@@ -472,7 +446,7 @@ static void HandleCommandLine(LPWSTR lpCmdLine)
 		vr::VR_Shutdown();
 		exit(-2);
 	}
-	else if (lstrcmp(lpCmdLine, L"-activatemultipledrivers") == 0)
+	else if (strcmp(cmdLineArg, "-activatemultipledrivers") == 0)
 	{
 		int ret = -2;
 		auto vrErr = vr::VRInitError_None;

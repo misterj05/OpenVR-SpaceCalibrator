@@ -109,7 +109,7 @@ void IPCServer::RunThread(IPCServer *_this)
 			LOG("IPC client connected");
 
 			auto pipeInst = _this->CreatePipeInstance(nextPipe);
-			CompletedWriteCallback(0, sizeof protocol::Response, (LPOVERLAPPED) pipeInst);
+			CompletedWriteCallback(0, sizeof(protocol::Response), (LPOVERLAPPED) pipeInst);
 
 			connectPending = CreateAndConnectInstance(&connectOverlap, nextPipe);
 		}
@@ -134,8 +134,8 @@ BOOL IPCServer::CreateAndConnectInstance(LPOVERLAPPED overlap, HANDLE &pipe)
 		PIPE_ACCESS_DUPLEX | FILE_FLAG_OVERLAPPED,
 		PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
 		PIPE_UNLIMITED_INSTANCES,
-		sizeof protocol::Request,
-		sizeof protocol::Response,
+		sizeof(protocol::Request),
+		sizeof(protocol::Response),
 		1000,
 		0
 	);
@@ -176,7 +176,7 @@ void IPCServer::CompletedReadCallback(DWORD err, DWORD bytesRead, LPOVERLAPPED o
 		success = WriteFileEx(
 			pipeInst->pipe,
 			&pipeInst->response,
-			sizeof protocol::Response,
+			sizeof(protocol::Response),
 			overlap,
 			(LPOVERLAPPED_COMPLETION_ROUTINE) CompletedWriteCallback
 		);
@@ -201,12 +201,12 @@ void IPCServer::CompletedWriteCallback(DWORD err, DWORD bytesWritten, LPOVERLAPP
 	PipeInstance *pipeInst = (PipeInstance *) overlap;
 	BOOL success = FALSE;
 
-	if (err == 0 && bytesWritten == sizeof protocol::Response)
+	if (err == 0 && bytesWritten == sizeof(protocol::Response))
 	{
 		success = ReadFileEx(
 			pipeInst->pipe,
 			&pipeInst->request,
-			sizeof protocol::Request,
+			sizeof(protocol::Request),
 			overlap,
 			(LPOVERLAPPED_COMPLETION_ROUTINE) CompletedReadCallback
 		);

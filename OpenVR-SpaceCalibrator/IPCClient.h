@@ -14,5 +14,5 @@ public:
 	protocol::Response Receive();
 
 private:
-	int pipe = -1;
+	int fd = -1;
 };

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Logging.h"
-#include <MinHook.h>
+#include "windows.h"
 #include <map>
 #include <string>
 
