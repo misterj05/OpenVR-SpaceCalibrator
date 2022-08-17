@@ -23,13 +23,13 @@ private:
 	static std::map<std::string, IHook *> hooks;
 };
 
-template<class FuncType> class Hook : public IHook
+template <typename R, typename... Args>
+class Hook : public IHook
 {
 public:
-	FuncType originalFunc = nullptr;
 	Hook(const std::string &name) : IHook(name) { }
 
-	bool CreateHookInObjectVTable(void *object, int vtableOffset, void *detourFunction)
+	bool CreateHookInObjectVTable(void *object, int vtableOffset, R(*detourFunction)(Args...))
 	{
 		// For virtual objects, VC++ adds a pointer to the vtable as the first member.
 		// To access the vtable, we simply dereference the object.
@@ -37,38 +37,72 @@ public:
 
 		// The vtable itself is an array of pointers to member functions,
 		// in the order they were declared in.
-		targetFunc = vtable[vtableOffset];
+		targetFunc = reinterpret_cast<R(*)(Args...)>(vtable[vtableOffset]);
 
-		auto err = MH_CreateHook(targetFunc, detourFunction, (LPVOID *)&originalFunc);
-		if (err != MH_OK)
-		{
-			LOG("Failed to create hook for %s, error: %s", name.c_str(), MH_StatusToString(err));
-			return false;
-		}
-
-		err = MH_EnableHook(targetFunc);
-		if (err != MH_OK)
-		{
-			LOG("Failed to enable hook for %s, error: %s", name.c_str(), MH_StatusToString(err));
-			MH_RemoveHook(targetFunc);
-			return false;
-		}
+		intptr_t relativeAddress = reinterpret_cast<intptr_t>(detourFunction) - reinterpret_cast<intptr_t>(targetFunc);
+		// JMP relative address
+		// 0xE9 ?? ?? ?? ??
+		// Address is little endian
+		uint8_t* targetFuncCode = reinterpret_cast<uint8_t*>(targetFunc);
+		unpatched[0] = targetFuncCode[0];
+		unpatched[1] = targetFuncCode[1];
+		unpatched[2] = targetFuncCode[2];
+		unpatched[3] = targetFuncCode[3];
+		unpatched[4] = targetFuncCode[4];
+		patched[0] = 0xE9;
+		patched[1] = (relativeAddress >> 24) & 0xFF;
+		patched[2] = (relativeAddress >> 16) & 0xFF;
+		patched[3] = (relativeAddress >> 8) & 0xFF;
+		patched[4] = (relativeAddress >> 0) & 0xFF;
+		targetFuncCode[0] = patched[0];
+		targetFuncCode[1] = patched[1];
+		targetFuncCode[2] = patched[2];
+		targetFuncCode[3] = patched[3];
+		targetFuncCode[4] = patched[4];
 
 		LOG("Enabled hook for %s", name.c_str());
 		enabled = true;
 		return true;
 	}
 
+	R OriginalFunc(Args... args)
+	{
+		uint8_t* targetFuncCode = reinterpret_cast<uint8_t*>(targetFunc);
+		targetFuncCode[0] = unpatched[0];
+		targetFuncCode[1] = unpatched[1];
+		targetFuncCode[2] = unpatched[2];
+		targetFuncCode[3] = unpatched[3];
+		targetFuncCode[4] = unpatched[4];
+		if constexpr (!std::is_void<R>::value)
+		{
+			R result = targetFunc(args...);
+			targetFuncCode[0] = patched[0];
+			targetFuncCode[1] = patched[1];
+			targetFuncCode[2] = patched[2];
+			targetFuncCode[3] = patched[3];
+			targetFuncCode[4] = patched[4];
+			return result;
+		} else {
+			targetFuncCode[0] = patched[0];
+			targetFuncCode[1] = patched[1];
+			targetFuncCode[2] = patched[2];
+			targetFuncCode[3] = patched[3];
+			targetFuncCode[4] = patched[4];
+		}
+	}
+
 	void Destroy()
 	{
 		if (enabled)
 		{
-			MH_RemoveHook(targetFunc);
+			// revert targetFunc patch
 			enabled = false;
 		}
 	}
 
 private:
 	bool enabled = false;
-	void* targetFunc = nullptr;
+	R(*targetFunc)(Args...) = nullptr;
+	uint8_t unpatched[5];
+	uint8_t patched[5];
 };
