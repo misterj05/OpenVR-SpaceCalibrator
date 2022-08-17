@@ -2,7 +2,7 @@
 This is a linux port of OpenVR Space Calibrator
 
 ### TODO
-- Implement function hooking
+- Get it working
 - Clean out Windows specific project files
 
 ### Building
