@@ -3,6 +3,7 @@
 #include "Logging.h"
 #include <map>
 #include <string>
+#include <sys/mman.h>
 
 class IHook
 {
@@ -44,8 +45,8 @@ public:
 		// 0xE9 ?? ?? ?? ??
 		// Address is little endian
 		uint8_t* targetFuncCode = reinterpret_cast<uint8_t*>(targetFunc);
-		int startPage = targetFuncCode & 0xFFF;
-		int endPage = (targetFuncCode + 5) & 0xFFF;
+		intptr_t startPage = reinterpret_cast<intptr_t >(targetFuncCode) & 0xFFF;
+		intptr_t endPage = (reinterpret_cast<intptr_t >(targetFuncCode) + 5) & 0xFFF;
 		mprotect(targetFuncCode, endPage - startPage + 0xFFF, PROT_READ | PROT_WRITE | PROT_EXEC);
 		unpatched[0] = targetFuncCode[0];
 		unpatched[1] = targetFuncCode[1];
@@ -72,8 +73,8 @@ public:
 	R OriginalFunc(Args... args)
 	{
 		uint8_t* targetFuncCode = reinterpret_cast<uint8_t*>(targetFunc);
-		int startPage = targetFuncCode & 0xFFF;
-		int endPage = (targetFuncCode + 5) & 0xFFF;
+		intptr_t startPage = reinterpret_cast<intptr_t >(targetFuncCode) & 0xFFF;
+		intptr_t endPage = (reinterpret_cast<intptr_t >(targetFuncCode) + 5) & 0xFFF;
 		mprotect(targetFuncCode, endPage - startPage + 0xFFF, PROT_READ | PROT_WRITE | PROT_EXEC);
 		targetFuncCode[0] = unpatched[0];
 		targetFuncCode[1] = unpatched[1];
