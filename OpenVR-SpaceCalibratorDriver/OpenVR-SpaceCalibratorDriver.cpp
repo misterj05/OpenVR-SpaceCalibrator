@@ -6,7 +6,7 @@
 #include <cstring>
 #include <openvr_driver.h>
 
-void *HmdDriverFactory(const char *pInterfaceName, int *pReturnCode)
+extern "C" void *HmdDriverFactory(const char *pInterfaceName, int *pReturnCode)
 {
 	TRACE("HmdDriverFactory(%s)", pInterfaceName);
 
