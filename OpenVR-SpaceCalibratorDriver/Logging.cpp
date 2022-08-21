@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_DEPRECATE
 #include "Logging.h"
 #include <chrono>
 
