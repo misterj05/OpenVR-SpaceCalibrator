@@ -70,6 +70,7 @@ void IPCServer::RunThread(IPCServer *_this)
 		return;
 	}
 	std::string socketPath = std::string(getenv("HOME")) + "/.local/share/OpenVR-SpaceCalibrator/socket";
+	unlink(socketPath.c_str());
 	struct sockaddr_un serverAddress;
 	memset(&serverAddress, 0, sizeof(struct sockaddr_un));
 	serverAddress.sun_family = AF_UNIX;
