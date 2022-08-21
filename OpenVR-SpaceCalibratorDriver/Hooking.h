@@ -45,9 +45,9 @@ public:
 		// 0xE9 ?? ?? ?? ??
 		// Address is little endian
 		uint8_t* targetFuncCode = reinterpret_cast<uint8_t*>(targetFunc);
-		intptr_t startPage = reinterpret_cast<intptr_t >(targetFuncCode) & 0xFFF;
-		intptr_t endPage = (reinterpret_cast<intptr_t >(targetFuncCode) + 5) & 0xFFF;
-		mprotect(targetFuncCode, endPage - startPage + 0xFFF, PROT_READ | PROT_WRITE | PROT_EXEC);
+		intptr_t startPage = reinterpret_cast<intptr_t >(targetFuncCode) & ~0xFFF;
+		intptr_t endPage = (reinterpret_cast<intptr_t >(targetFuncCode) + 5) & ~0xFFF;
+		mprotect(reinterpret_cast<void*>(startPage), ((endPage - startPage) * 4096) + 4096, PROT_READ | PROT_WRITE | PROT_EXEC);
 		unpatched[0] = targetFuncCode[0];
 		unpatched[1] = targetFuncCode[1];
 		unpatched[2] = targetFuncCode[2];
@@ -63,7 +63,7 @@ public:
 		targetFuncCode[2] = patched[2];
 		targetFuncCode[3] = patched[3];
 		targetFuncCode[4] = patched[4];
-		mprotect(targetFuncCode, endPage - startPage + 0xFFF, PROT_EXEC);
+		mprotect(reinterpret_cast<void*>(startPage), ((endPage - startPage) * 4096) + 4096, PROT_EXEC);
 
 		LOG("Enabled hook for %s", name.c_str());
 		enabled = true;
@@ -73,9 +73,9 @@ public:
 	R OriginalFunc(Args... args)
 	{
 		uint8_t* targetFuncCode = reinterpret_cast<uint8_t*>(targetFunc);
-		intptr_t startPage = reinterpret_cast<intptr_t >(targetFuncCode) & 0xFFF;
-		intptr_t endPage = (reinterpret_cast<intptr_t >(targetFuncCode) + 5) & 0xFFF;
-		mprotect(targetFuncCode, endPage - startPage + 0xFFF, PROT_READ | PROT_WRITE | PROT_EXEC);
+		intptr_t startPage = reinterpret_cast<intptr_t >(targetFuncCode) & ~0xFFF;
+		intptr_t endPage = (reinterpret_cast<intptr_t >(targetFuncCode) + 5) & ~0xFFF;
+		mprotect(reinterpret_cast<void*>(startPage), ((endPage - startPage) * 4096) + 4096, PROT_READ | PROT_WRITE | PROT_EXEC);
 		targetFuncCode[0] = unpatched[0];
 		targetFuncCode[1] = unpatched[1];
 		targetFuncCode[2] = unpatched[2];
@@ -89,7 +89,7 @@ public:
 			targetFuncCode[2] = patched[2];
 			targetFuncCode[3] = patched[3];
 			targetFuncCode[4] = patched[4];
-			mprotect(targetFuncCode, endPage - startPage + 0xFFF, PROT_EXEC);
+			mprotect(reinterpret_cast<void*>(startPage), ((endPage - startPage) * 4096) + 4096, PROT_EXEC);
 			return result;
 		} else {
 			targetFuncCode[0] = patched[0];
@@ -97,7 +97,7 @@ public:
 			targetFuncCode[2] = patched[2];
 			targetFuncCode[3] = patched[3];
 			targetFuncCode[4] = patched[4];
-			mprotect(targetFuncCode, endPage - startPage + 0xFFF, PROT_EXEC);
+			mprotect(reinterpret_cast<void*>(startPage), ((endPage - startPage) * 4096) + 4096, PROT_EXEC);
 		}
 	}
 
@@ -106,15 +106,15 @@ public:
 		if (enabled)
 		{
 			uint8_t* targetFuncCode = reinterpret_cast<uint8_t*>(targetFunc);
-			intptr_t startPage = reinterpret_cast<intptr_t >(targetFuncCode) & 0xFFF;
-			intptr_t endPage = (reinterpret_cast<intptr_t >(targetFuncCode) + 5) & 0xFFF;
-			mprotect(targetFuncCode, endPage - startPage + 0xFFF, PROT_READ | PROT_WRITE | PROT_EXEC);
+			intptr_t startPage = reinterpret_cast<intptr_t >(targetFuncCode) & ~0xFFF;
+			intptr_t endPage = (reinterpret_cast<intptr_t >(targetFuncCode) + 5) & ~0xFFF;
+			mprotect(reinterpret_cast<void*>(startPage), ((endPage - startPage) * 4096) + 4096, PROT_READ | PROT_WRITE | PROT_EXEC);
 			targetFuncCode[0] = unpatched[0];
 			targetFuncCode[1] = unpatched[1];
 			targetFuncCode[2] = unpatched[2];
 			targetFuncCode[3] = unpatched[3];
 			targetFuncCode[4] = unpatched[4];
-			mprotect(targetFuncCode, endPage - startPage + 0xFFF, PROT_EXEC);
+			mprotect(reinterpret_cast<void*>(startPage), ((endPage - startPage) * 4096) + 4096, PROT_EXEC);
 			enabled = false;
 		}
 	}
