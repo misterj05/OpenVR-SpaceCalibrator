@@ -106,7 +106,7 @@ void IPCServer::RunThread(IPCServer *_this)
 		LOG("IPC client connected");
 
 		struct pollfd fds[2];
-		fds[0].fd = 0;
+		fds[0].fd = _this->stopRead;
 		fds[0].events = POLLIN | POLLRDBAND;
 		fds[1].fd = clientSocket;
 		fds[1].events = POLLIN | POLLRDBAND;
