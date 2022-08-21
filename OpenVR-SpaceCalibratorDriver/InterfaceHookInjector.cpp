@@ -20,7 +20,7 @@ static void DetourTrackedDevicePoseUpdated005(vr::IVRServerDriverHost *_this, ui
 	auto pose = newPose;
 	if (Driver->HandleDevicePoseUpdated(unWhichDevice, pose))
 	{
-		TrackedDevicePoseUpdatedHook005.OriginalFunc(_this, unWhichDevice, pose, unPoseStructSize);
+		TrackedDevicePoseUpdatedHook005.originalFunc(_this, unWhichDevice, pose, unPoseStructSize);
 	}
 }
 
@@ -30,14 +30,14 @@ static void DetourTrackedDevicePoseUpdated006(vr::IVRServerDriverHost *_this, ui
 	auto pose = newPose;
 	if (Driver->HandleDevicePoseUpdated(unWhichDevice, pose))
 	{
-		TrackedDevicePoseUpdatedHook006.OriginalFunc(_this, unWhichDevice, pose, unPoseStructSize);
+		TrackedDevicePoseUpdatedHook006.originalFunc(_this, unWhichDevice, pose, unPoseStructSize);
 	}
 }
 
 static void *DetourGetGenericInterface(vr::IVRDriverContext *_this, const char *pchInterfaceVersion, vr::EVRInitError *peError)
 {
 	TRACE("ServerTrackedDeviceProvider::DetourGetGenericInterface(%s)", pchInterfaceVersion);
-	auto originalInterface = GetGenericInterfaceHook.OriginalFunc(_this, pchInterfaceVersion, peError);
+	auto originalInterface = GetGenericInterfaceHook.originalFunc(_this, pchInterfaceVersion, peError);
 
 	std::string iface(pchInterfaceVersion);
 	if (iface == "IVRServerDriverHost_005")
