@@ -3,7 +3,7 @@
 
 FILE *LogFile;
 
-void OpenLogFile()
+__attribute__((constructor)) void OpenLogFile()
 {
 	LogFile = fopen("space_calibrator_driver.log", "a");
 	if (LogFile == nullptr)
