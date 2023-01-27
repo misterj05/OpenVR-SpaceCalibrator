@@ -5,13 +5,13 @@
 
 static ServerTrackedDeviceProvider *Driver = nullptr;
 
-static Hook<void*, vr::IVRDriverContext*, const char*, vr::EVRInitError*>
+static Hook<void*(*)(vr::IVRDriverContext *, const char *, vr::EVRInitError *)> 
 	GetGenericInterfaceHook("IVRDriverContext::GetGenericInterface");
 
-static Hook<void, vr::IVRServerDriverHost*, uint32_t, const vr::DriverPose_t&, uint32_t>
+static Hook<void(*)(vr::IVRServerDriverHost *, uint32_t, const vr::DriverPose_t &, uint32_t)>
 	TrackedDevicePoseUpdatedHook005("IVRServerDriverHost005::TrackedDevicePoseUpdated");
 
-static Hook<void, vr::IVRServerDriverHost*, uint32_t, const vr::DriverPose_t&, uint32_t>
+static Hook<void(*)(vr::IVRServerDriverHost *, uint32_t, const vr::DriverPose_t &, uint32_t)>
 	TrackedDevicePoseUpdatedHook006("IVRServerDriverHost006::TrackedDevicePoseUpdated");
 
 static void DetourTrackedDevicePoseUpdated005(vr::IVRServerDriverHost *_this, uint32_t unWhichDevice, const vr::DriverPose_t &newPose, uint32_t unPoseStructSize)
