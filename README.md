@@ -20,6 +20,16 @@ cd build
 
 If you used the `install.sh` script, the driver will be loaded by SteamVR, but the companion software must be started separately every time.
 
+## Support
+
+Feel free to reach out on Discord:
+
+https://discord.gg/gHwJ2vwSWV
+
+## What's next
+
+- Include the Continuous Calibration by bd_ (lots of windows-specific code so might take some time)
+
 # OpenVR Space Calibrator
 
 This helps you use tracked VR devices from one company with any other. It aligns multiple tracking systems with a quick calibration step. It may not work for your setup, but there are many cases that work to a degree, and some work very well.
