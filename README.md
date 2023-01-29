@@ -1,22 +1,24 @@
-## Linux Port
-This is a linux port of OpenVR Space Calibrator
+# Linux Port
+This is a Linux port of OpenVR Space Calibrator that I plan to maintain going forward.
 
-### TODO
-- Get it working
-- Clean out Windows specific project files
+## Credits
+- Original code by [pushrax](https://github.com/pushrax)
+- Base of this repo is the Linux fork by [gyroninja](https://github.com/gyroninja)
+- Hook logic from [AngriestSCV](https://github.com/AngriestSCV)'s fork
 
-### Building
+Please thank them as I'm just adding some very minor fixes.
+
+## Building
 
 ```
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make -j $(nproc)
+mkdir build
+cd build
+../install.sh
 ```
 
-### Running
+## Running
 
-TODO
+If you used the `install.sh` script, the driver will be loaded by SteamVR, but the companion software must be started separately every time.
 
 # OpenVR Space Calibrator
 
@@ -30,10 +32,6 @@ This helps you use tracked VR devices from one company with any other. It aligns
 There is a community of a few thousand on [**Discord**](https://discord.gg/m7g2Wyj) and a newer community on [**Reddit**](https://www.reddit.com/r/MixedVR/). You may find the answer to your question in [the **wiki**](https://github.com/pushrax/OpenVR-SpaceCalibrator/wiki).
 
 A quick video of how this works using an old version (~v0.3) is available at https://www.youtube.com/watch?v=W3TnQd9JMl4. The user interface has been upgraded since then; the calibration is now done via a SteamVR dashboard menu, and there's much more configurability.
-
-### Install
-
-Before following the directions below, download and run the installer for the [latest release](https://github.com/pushrax/OpenVR-SpaceCalibrator/releases). This will automatically set up SteamVR for use with multiple tracking systems (`activateMultipleDrivers: true`). There are many guides that say you need to edit the SteamVR config manually. You do not.
 
 ### Usage
 
@@ -60,11 +58,7 @@ As part of first time setup, or when you make a change to your space (e.g. move 
 
 ### Calibration outside VR
 
-You can calibrate without using the dashboard overlay by unminimizing Space Calibrator after opening SteamVR (it starts minimized). This is required if you're calibrating for a lone HMD without any devices in its tracking system.
-
-### Compiling your own build
-
-Open `OpenVR-SpaceCalibrator.sln` in Visual Studio 2017 and build. There are no external dependencies.
+You can calibrate without using the dashboard overlay by unminimizing Space Calibrator after opening SteamVR. This is required if you're calibrating for a lone HMD without any devices in its tracking system.
 
 ### The math
 

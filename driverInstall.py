@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-import os, sys
+import os
 import subprocess
 import re
 import argparse
-
-#vrpathreg = "/home/zack/.local/share/Steam/steamapps/common/SteamVR/bin/vrpathreg.sh"
 
 def GetDrivers(vrpathreg):
     proc = subprocess.Popen([vrpathreg], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding='utf-8')
@@ -25,19 +23,19 @@ def RemoveDriver(vrpathreg, driver):
     cmd = [vrpathreg, 'removedriver', driver]
     print(cmd)
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding='utf-8')
-    (stdout, _) = proc.communicate()
+    (_, _) = proc.communicate()
 
 def AddDriver(vrpathreg, driver):
     cmd = [vrpathreg, 'adddriver', driver]
     print(cmd)
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, encoding='utf-8')
-    (stdout, _) = proc.communicate()
+    (_, _) = proc.communicate()
 
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--toInstall', help="Driver to install (folder path)", required=True)
-    parser.add_argument('--vrpathreg', help="Path to vrpathreg.sh", required=True)
+    parser.add_argument('--toInstall', help="Driver to install (folder path that contains driver.vrdrivermanifest)", default=".")
+    parser.add_argument('--vrpathreg', help="Path to vrpathreg.sh", default="~/.local/share/Steam/steamapps/common/SteamVR/bin/vrpathreg.sh")
 
     args = parser.parse_args()
 
@@ -53,23 +51,24 @@ def main():
     if fail: 
         return
 
-    drivers = GetDrivers(args.vrpathreg)
+    vrpathreg = os.path.abspath(args.vrpathreg)
+    to_install = os.path.abspath(args.toInstall)
+    driver_name = os.path.basename(to_install)
 
-    spaceCalReg = re.compile('.*01spacecalibrator.*')
+    drivers = GetDrivers(vrpathreg)
 
     for driver in drivers:
-        RemoveDriver(args.vrpathreg, driver)
+        RemoveDriver(vrpathreg, driver)
 
-    AddDriver(args.vrpathreg, args.toInstall)
+    AddDriver(vrpathreg, to_install)
 
     for driver in drivers[::-1]:
-        if spaceCalReg.match(driver):
+        if driver_name in driver:
             continue
 
-        AddDriver(args.vrpathreg, driver)
+        AddDriver(vrpathreg, driver)
 
     pass
-
 
 if __name__ == "__main__":
     main()
