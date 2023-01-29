@@ -57,7 +57,7 @@ void CreateGLFWWindow()
 	glfwSwapInterval(1);
 	gl3wInit();
 
-	glfwIconifyWindow(glfwWindow);
+	//glfwIconifyWindow(glfwWindow);
 
 #ifdef DEBUG_LOGS
 	glDebugMessageCallback(openGLDebugCallback, nullptr);
@@ -238,7 +238,7 @@ void RunLoop()
 				switch (vrEvent.eventType) {
 				case vr::VREvent_MouseMove:
 					io.MousePos.x = vrEvent.data.mouse.x;
-					io.MousePos.y = vrEvent.data.mouse.y;
+					io.MousePos.y = fboTextureHeight - vrEvent.data.mouse.y;
 					break;
 				case vr::VREvent_MouseButtonDown:
 					io.MouseDown[vrEvent.data.mouse.button == vr::VRMouseButton_Left ? 0 : 1] = true;
