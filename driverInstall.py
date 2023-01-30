@@ -35,7 +35,7 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--toInstall', help="Driver to install (folder path that contains driver.vrdrivermanifest)", default=".")
-    parser.add_argument('--vrpathreg', help="Path to vrpathreg.sh", default="~/.local/share/Steam/steamapps/common/SteamVR/bin/vrpathreg.sh")
+    parser.add_argument('--vrpathreg', help="Path to vrpathreg.sh", default="/home/%s/.local/share/Steam/steamapps/common/SteamVR/bin/vrpathreg.sh" % os.getenv("USER"))
 
     args = parser.parse_args()
 

@@ -10,6 +10,10 @@ Please thank them as I'm just adding some very minor fixes.
 
 ## Building
 
+Required packages: `cmake` `glfw` `eigen` `openvr`
+
+On Arch-based distros: `pacman -S cmake glfw-x11 eigen openvr`
+
 ```
 mkdir build
 cd build
@@ -18,7 +22,43 @@ cd build
 
 ## Running
 
+**If using ALVR**: Launch ALVR, then on the `Installation` tab, click `Register ALVR Driver`.
+
+**From now on you _must_ start SteamVR from Steam instead of starting ALVR!** SteamVR will start ALVR for you.
+
 If you used the `install.sh` script, the driver will be loaded by SteamVR, but the companion software must be started separately every time.
+
+For best results, I recommend doing the calibration in SteamVR void/home, before launching any titles, especially if you have high latency or low frame rate.
+
+### Step-by-step Guide to Calibrate using ALVR
+
+Verify settings:
+ - Settings/Headset tab -> `Show advanced options` -> `Use Headset Tracking System`: on
+ - Installation tab: ALVR should be listed under `Registered Drivers`. If not, press `Register ALVR driver`
+
+If you want to use Lighthouse-tracked controllers with ALVR: (not needed if you just want trackers)
+ - Settings/Headset tab -> `Controllers`: off
+
+Pico users might want to increase the screen / sleep timeouts to 5 minutes or higher, as the Pico will lose calibration when the screen is off: [Link](https://www.reddit.com/r/PICO_VR/comments/zmspi9/i_managed_to_turn_off_the_pico_4s_sleep_mode_by/)
+
+If you have ALVR open at this point, close it as well as SteamVR.
+
+Steps:
+- Launch SteamVR. It should start ALVR for you.
+- Start the `openvr-spacecalibrator` companion software.
+- Connect your headset via ALVR.
+- Turn on one lighthouse-tracked device.
+- Select these settings on the Space Calibrator window (in VR or on destkop)
+  - Calibration Speed: `Slow` or `Very Slow`
+  - Reference Space: The top option, which should be the headset
+  - Target space: Select the lighthouse device that you'll be using
+- Click `Start Calibration` while holding the lighthouse device firmly to your headset.
+  - The lighthouse device shouldn't wiggle, change position or orientation relative to the headset while calibration.
+- Walk around your play area while still holding the lighthouse device firmly.
+- Once calibration is done, power on your other lighthouse devices, they should be good to go.
+
+Base stations may show up in the wrong places, this issue can be ignored.
+
 
 ## Support
 
@@ -26,9 +66,9 @@ Feel free to reach out on Discord:
 
 https://discord.gg/gHwJ2vwSWV
 
-## What's next
+## To do
 
-- Include the Continuous Calibration by bd_ (lots of windows-specific code so might take some time)
+- Include the Continuous Calibration by bd_ 
 
 # OpenVR Space Calibrator
 
