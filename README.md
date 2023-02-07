@@ -9,12 +9,21 @@ This is a Linux port of OpenVR Space Calibrator that I plan to maintain going fo
 Please thank them as I'm just adding some very minor fixes.
 
 ## Building
+The following packages are required to build:
+  * `cmake`
+  * `glfw`
+  * `eigen`
+  * `openvr`
 
-Required packages: `cmake` `glfw` `eigen` `openvr`
+Arch Linux:
+  * `pacman -S cmake glfw-x11 eigen openvr`
 
-On Arch-based distros: `pacman -S cmake glfw-x11 eigen openvr`
+Debian 11 / Ubuntu 22.10:
+  * `sudo apt install sudo apt install cmake libeigen3-dev libglfw3-dev libopenvr-dev`
 
 ```
+git clone https://github.com/some-username-here1/OpenVR-SpaceCalibrator.git
+cd OpenVR-SpaceCalibrator/
 mkdir build
 cd build
 ../install.sh
@@ -106,7 +115,7 @@ As part of first time setup, or when you make a change to your space (e.g. move 
     6. Move and rotate your hand around slowly a few times, like you're calibrating the compass on your phone. You want to sample as many orientations as possible.
     7. Done! A profile will be saved automatically. If you haven't already, turn on all your devices. Space Calibrator will automatically apply the calibration to devices as they turn on.
 
-### Calibration outside VR
+### Calibration outside of VR
 
 You can calibrate without using the dashboard overlay by unminimizing Space Calibrator after opening SteamVR. This is required if you're calibrating for a lone HMD without any devices in its tracking system.
 
