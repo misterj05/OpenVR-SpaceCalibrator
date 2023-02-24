@@ -5,6 +5,7 @@ This is a Linux port of OpenVR Space Calibrator that I plan to maintain going fo
 - Original code by [pushrax](https://github.com/pushrax)
 - Base of this repo is the Linux fork by [gyroninja](https://github.com/gyroninja)
 - Hook logic from [AngriestSCV](https://github.com/AngriestSCV)'s fork
+- Additional features from [bd_](https://github.com/bdunderscore)'s fork
 
 Please thank them as I'm just adding some very minor fixes.
 
