@@ -9,6 +9,12 @@ This is a Linux port of OpenVR Space Calibrator that I plan to maintain going fo
 
 Please thank them as I'm just adding some very minor fixes.
 
+## Join the Conversation
+
+Discussion of Space Cal as well as other Linux VR related topics:
+
+https://discord.gg/gHwJ2vwSWV
+
 ## Building
 The following packages are required to build:
   * `cmake`
@@ -23,7 +29,7 @@ Debian 11 / Ubuntu 22.10:
   * `sudo apt install cmake libeigen3-dev libglfw3-dev libopenvr-dev`
 
 ```
-git clone https://github.com/some-username-here1/OpenVR-SpaceCalibrator.git
+git clone https://github.com/galister/OpenVR-SpaceCalibrator.git
 cd OpenVR-SpaceCalibrator/
 mkdir build
 cd build
@@ -34,7 +40,7 @@ cd build
 
 **If using ALVR**: Launch ALVR, then on the `Installation` tab, click `Register ALVR Driver`.
 
-**From now on you _must_ start SteamVR from Steam instead of starting ALVR!** SteamVR will start ALVR for you.
+**From now on, start SteamVR from Steam instead of starting ALVR!** SteamVR will start ALVR for you.
 
 If you used the `install.sh` script, the driver will be loaded by SteamVR, but the companion software must be started separately every time.
 
@@ -42,23 +48,25 @@ For best results, I recommend doing the calibration in SteamVR void/home, before
 
 ### Step-by-step Guide to Calibrate using ALVR
 
-Verify settings:
+#### Verify settings
  - Settings/Headset tab -> `Show advanced options` -> `Use Headset Tracking System`: on
  - Installation tab: ALVR should be listed under `Registered Drivers`. If not, press `Register ALVR driver`
-
-If you want to use Lighthouse-tracked controllers with ALVR: (not needed if you just want trackers)
+ 
+#### If you want to use Lighthouse-tracked controllers with ALVR (not needed if you just want trackers)
  - Settings/Headset tab -> `Controllers`: off
- - ALVR Nightly 2023.02.24 or later, earlier versions tend to crash with controllers off.
+ - Use ALVR Nightly 2023.02.24 or later, earlier versions tend to crash with controllers off.
 
-If you're losing calibration on reconnect, this is likely due to your headset not supporting stage tracking (cough Pico). Try disabling automatic recentering on reconnect:
+#### In order to prevent losing calibration on reconnect, disable automatic recentering
  - Settings/Headset tab -> `positionRecenteringMode`: `disabled`
  - Settings/Headset tab -> `rotationRecenteringMode`: `disabled`
 
-Pico users might also want to increase the sleep timeout to 5 minutes or higher, as you will lose calibration if the headset goes to sleep: [Link](https://www.reddit.com/r/PICO_VR/comments/zmspi9/i_managed_to_turn_off_the_pico_4s_sleep_mode_by/)
+#### Note to Pico users
+Pico users might also want to increase the sleep timeout to 5 minutes or higher, as you will lose calibration if the headset goes to sleep: [Link](https://www.reddit.com/r/PICO_VR/comments/zmspi9/i_managed_to_turn_off_the_pico_4s_sleep_mode_by/) \
+(Will not lose calibration on screen-off, as long as you disabled recentering as per above.)
 
+### Steps:
 If you have ALVR open at this point, close it as well as SteamVR.
 
-Steps:
 - Launch SteamVR. It should start ALVR for you.
 - Start the `openvr-spacecalibrator` companion software.
 - Connect your headset via ALVR.
@@ -74,18 +82,22 @@ Steps:
 
 Base stations may show up in the wrong places, this issue can be ignored.
 
+## Known shortcomings brought to you by SteamVR
 
-## Support
+There are a few issues that can pop up. Luckily, these can all be identified before calibration is started and don't pose an issue later during your session.
 
-Feel free to reach out on Discord:
+- Disconnected dongles cannot be reconnected without a SteamVR restart.
+  - Ensure that all dongles have a stable USB link so that they won't momentarily disconnect.
+- Tracker turns off and/or stuck blue and won't turn green.
+  - This is likely because your dongle got disconnected momentarily.
+- One or more trackers just don't show up in SteamVR, even though they're solid green.
+  - Verify that all trackers show up in SteamVR before you do start a title or calibrate, if anything's amiss, restart SteamVR
+- Head tracking is weird, image rotates differently than your headset, mountains of brown on the ALVR graph.
+  - This I believe is related to the SteamVR-on-Linux vsync bug. Restarting SteamVR 1-2 times will fix it.
 
-https://discord.gg/gHwJ2vwSWV
+---
 
-## To do
-
-- Include the Continuous Calibration by bd_ 
-
-# OpenVR Space Calibrator
+# Original non-Linux Readme Starts Here
 
 This helps you use tracked VR devices from one company with any other. It aligns multiple tracking systems with a quick calibration step. It may not work for your setup, but there are many cases that work to a degree, and some work very well.
 
