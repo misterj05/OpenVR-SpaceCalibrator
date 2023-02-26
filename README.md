@@ -20,7 +20,7 @@ Arch Linux:
   * `pacman -S cmake glfw-x11 eigen openvr`
 
 Debian 11 / Ubuntu 22.10:
-  * `sudo apt install sudo apt install cmake libeigen3-dev libglfw3-dev libopenvr-dev`
+  * `sudo apt install cmake libeigen3-dev libglfw3-dev libopenvr-dev`
 
 ```
 git clone https://github.com/some-username-here1/OpenVR-SpaceCalibrator.git
@@ -48,8 +48,13 @@ Verify settings:
 
 If you want to use Lighthouse-tracked controllers with ALVR: (not needed if you just want trackers)
  - Settings/Headset tab -> `Controllers`: off
+ - ALVR Nightly 2023.02.24 or later, earlier versions tend to crash with controllers off.
 
-Pico users might want to increase the screen / sleep timeouts to 5 minutes or higher, as the Pico will lose calibration when the screen is off: [Link](https://www.reddit.com/r/PICO_VR/comments/zmspi9/i_managed_to_turn_off_the_pico_4s_sleep_mode_by/)
+If you're losing calibration on reconnect, this is likely due to your headset not supporting stage tracking (cough Pico). Try disabling automatic recentering on reconnect:
+ - Settings/Headset tab -> `positionRecenteringMode`: `disabled`
+ - Settings/Headset tab -> `rotationRecenteringMode`: `disabled`
+
+Pico users might also want to increase the sleep timeout to 5 minutes or higher, as you will lose calibration if the headset goes to sleep: [Link](https://www.reddit.com/r/PICO_VR/comments/zmspi9/i_managed_to_turn_off_the_pico_4s_sleep_mode_by/)
 
 If you have ALVR open at this point, close it as well as SteamVR.
 
