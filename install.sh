@@ -28,6 +28,8 @@ cp -r $SRC_DIR/OpenVR-SpaceCalibratorDriver/01spacecalibrator .
 mkdir -p 01spacecalibrator/bin/linux64
 cp OpenVR-SpaceCalibratorDriver/libopenvr-spacecalibratordriver.so 01spacecalibrator/bin/linux64/driver_01spacecalibrator.so
 
+mkdir -p ~/.local/share/OpenVR-SpaceCalibrator
+
 python3 $SRC_DIR/driverInstall.py --vrpathreg "$VRPATHREG" --toInstall "01spacecalibrator"
 
 echo "Driver is now installed."
