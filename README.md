@@ -12,8 +12,8 @@ Please thank them as I'm just adding some very minor fixes.
 ## Join the Conversation
 
 Discussion of Space Cal as well as other Linux VR related topics:
-
-https://discord.gg/gHwJ2vwSWV
+- Discord: https://discord.gg/gHwJ2vwSWV
+- Matrix Space: `#linux-vr-adventures:matrix.org`
 
 ## Building
 The following packages are required to build:
