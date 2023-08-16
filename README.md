@@ -38,6 +38,12 @@ cd build
 
 ## Running
 
+**If using ALVR AppImage**:
+- Extract the AppImage: `./ALVR-x86_64.AppImage --appimage-extract`
+- A folder `squashfs-root` is created. Put this somewhere nice.
+- From now on, run ALVR using the `AppRun` executable from the `squashfs-root` folder.
+- **You can't use SpaceCal with AppImage ALVR without extracting!**
+
 **If using ALVR**: Launch ALVR, then on the `Installation` tab, click `Register ALVR Driver`.
 
 **From now on, start SteamVR from Steam instead of starting ALVR!** SteamVR will start ALVR for you.
