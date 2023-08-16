@@ -38,19 +38,24 @@ cd build
 
 ## Running
 
-**If using ALVR AppImage**:
+**If using ALVR AppImage, first extract the AppImage!**:
 - Extract the AppImage: `./ALVR-x86_64.AppImage --appimage-extract`
 - A folder `squashfs-root` is created. Put this somewhere nice.
 - From now on, run ALVR using the `AppRun` executable from the `squashfs-root` folder.
 - **You can't use SpaceCal with AppImage ALVR without extracting!**
 
-**If using ALVR**: Launch ALVR, then on the `Installation` tab, click `Register ALVR Driver`.
-
-**From now on, start SteamVR from Steam instead of starting ALVR!**
+**If using ALVR**: 
+- Launch ALVR Dashboard
+- On the `Settings` tab:
+  - Under `Headset`, set both `Position Recentering Mode` and `Rotation Recentering Mode` to `None`
+  - Under `SteamVR Launcher`, set `Driver Launch Action` to `None`
+- On the `Installation` tab, click `Register ALVR Driver`
 
 If you used the `install.sh` script, the driver will be loaded by SteamVR, but the companion software must be started separately every time.
 
-For best results, I recommend doing the calibration in SteamVR void/home, before launching any titles, especially if you have high latency or low frame rate.
+For best results, I recommend doing the calibration:
+- in SteamVR void/home, before launching any titles, especially if you have high latency or low frame rate
+- with all trackers already connected. I've seen some glitches when connecting new trackers.
 
 ### Step-by-step Guide to Calibrate using ALVR
 
@@ -60,10 +65,6 @@ For best results, I recommend doing the calibration in SteamVR void/home, before
  
 #### If you want to use Lighthouse-tracked controllers with ALVR (not needed if you just want trackers)
  - Settings/Headset tab -> `Controllers` -> `Tracked`: off
-
-#### In order to prevent losing calibration on reconnect, disable automatic recentering
- - Settings/Headset tab -> `positionRecenteringMode`: `disabled`
- - Settings/Headset tab -> `rotationRecenteringMode`: `disabled`
 
 #### Note to Pico users
 Pico users might also want to increase the sleep timeout to 5 minutes or higher, as you will lose calibration if the headset goes to sleep: [Link](https://www.reddit.com/r/PICO_VR/comments/zmspi9/i_managed_to_turn_off_the_pico_4s_sleep_mode_by/) \
