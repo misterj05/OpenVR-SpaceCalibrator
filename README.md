@@ -46,7 +46,7 @@ cd build
 
 **If using ALVR**: Launch ALVR, then on the `Installation` tab, click `Register ALVR Driver`.
 
-**From now on, start SteamVR from Steam instead of starting ALVR!** SteamVR will start ALVR for you.
+**From now on, start SteamVR from Steam instead of starting ALVR!**
 
 If you used the `install.sh` script, the driver will be loaded by SteamVR, but the companion software must be started separately every time.
 
@@ -59,8 +59,7 @@ For best results, I recommend doing the calibration in SteamVR void/home, before
  - Installation tab: ALVR should be listed under `Registered Drivers`. If not, press `Register ALVR driver`
  
 #### If you want to use Lighthouse-tracked controllers with ALVR (not needed if you just want trackers)
- - Settings/Headset tab -> `Controllers`: off
- - Use ALVR Nightly 2023.02.24 or later, earlier versions tend to crash with controllers off.
+ - Settings/Headset tab -> `Controllers` -> `Tracked`: off
 
 #### In order to prevent losing calibration on reconnect, disable automatic recentering
  - Settings/Headset tab -> `positionRecenteringMode`: `disabled`
