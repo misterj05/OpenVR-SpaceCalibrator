@@ -72,7 +72,7 @@ Pico users might also want to increase the sleep timeout to 5 minutes or higher,
 ### Steps:
 If you have ALVR open at this point, close it as well as SteamVR.
 
-- Launch SteamVR. It should start ALVR for you.
+- Launch SteamVR and ALVR.
 - Start the `openvr-spacecalibrator` companion software.
 - Connect your headset via ALVR.
 - Turn on one lighthouse-tracked device.
