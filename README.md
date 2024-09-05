@@ -2,6 +2,8 @@
 
 This is a Linux port of OpenVR Space Calibrator that I plan to maintain going forward.
 
+This is to be used with SteamVR. If you're looking for a calibrator to be used with Monado/WiVRn, see [MoToC GitHub Repository](https://github.com/galister/motoc).
+
 ## Credits
 
 - Original code by [pushrax](https://github.com/pushrax)
